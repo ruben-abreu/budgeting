@@ -1,10 +1,7 @@
 const balanceElement = document.getElementById("balance");
 const valueInputElement = document.querySelector("input");
-
 const selectElement = document.querySelector("select");
-
 const additionButtonElement = document.querySelector("footer button");
-
 const entryListElement = document.querySelector("section ul");
 
 function addEntry(amount, operation) {
@@ -45,24 +42,34 @@ function updateBalance() {
     const valueElement = item.querySelector("strong");
     const operationElement = item.querySelector("span");
 
-    const value = parseInt(valueElement.innerText);
-    const operation = operationElement.innerText;
+    const valueText = valueElement.innerText;
+    const amount = parseFloat(valueText); // Parse the amount as a floating-point number
 
-    if (operation === "+") {
-      total = total + value;
-    } else if (operation === "-") {
-      total = total - value;
+    if (!isNaN(amount)) {
+      const operation = operationElement.innerText;
+      if (operation === "+") {
+        total += amount;
+      } else if (operation === "-") {
+        total -= amount;
+      }
     }
   }
-  balanceElement.innerText = total + "€";
+
+  balanceElement.innerText = total.toFixed(2) + "€"; // Display the total with two decimal places
 }
 
 additionButtonElement.onclick = function () {
-  const amount = valueInputElement.value;
+  const amountText = valueInputElement.value.trim();
   const operation = selectElement.value;
 
-  addEntry(amount, operation);
-  valueInputElement.value = "";
+  const amount = parseFloat(amountText); // Parse the amount as a floating-point number
 
-  updateBalance();
+  if (!isNaN(amount)) {
+    addEntry(amount, operation);
+    valueInputElement.value = "";
+
+    updateBalance();
+  } else {
+    alert("Please enter a valid numeric amount.");
+  }
 };
